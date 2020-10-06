@@ -26,7 +26,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lvgl/lvgl.h"
-#include "lcd_driver/ILI9341.h"
+#include "lcd_driver/ili9341.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,16 +61,18 @@ void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN 0 */
 void LV_Init(void) {
 	lv_init();
-	ili9341_init();
 
-	static lv_disp_buf_t disp_buf;
+	ILI9341_Init();
+
+    static lv_disp_buf_t disp_buf;
 	static lv_color_t buf_1[LV_HOR_RES_MAX * 10];
 	lv_disp_buf_init(&disp_buf, buf_1, NULL, LV_HOR_RES_MAX * 10);
 
 	lv_disp_drv_t disp_drv;
 	lv_disp_drv_init(&disp_drv);
 	disp_drv.buffer = &disp_buf;
-	disp_drv.flush_cb = ili9341_flush;
+	disp_drv.flush_cb = ILI9341_flush;
+
 	lv_disp_drv_register(&disp_drv);
 }
 /* USER CODE END 0 */

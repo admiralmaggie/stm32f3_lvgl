@@ -51,13 +51,15 @@
 osThreadId_t lvglTaskHandle;
 const osThreadAttr_t lvglTask_attributes = {
   .name = "LvGLTask",
-  .priority = (osPriority_t) osPriorityLow
+  .priority = (osPriority_t) osPriorityLow,
+  .stack_size = 512 * 4
 };
 
 osThreadId_t guiTaskHandle;
 const osThreadAttr_t guiTask_attributes = {
   .name = "GUITask",
-  .priority = (osPriority_t) osPriorityLow
+  .priority = (osPriority_t) osPriorityLow,
+  .stack_size = 512 * 4
 };
 
 /* USER CODE END Variables */
@@ -173,16 +175,27 @@ void StartGUITask(void *argument) {
 }
 
 void hello_world(void) {
-    /*Create a Label on the currently active screen*/
-    lv_obj_t *label1 =  lv_label_create(lv_scr_act(), NULL);
+    lv_obj_t * btn = lv_btn_create(lv_scr_act(), NULL);     /*Add a button the current screen*/
+    lv_obj_set_pos(btn, 10, 10);                            /*Set its position*/
+    lv_obj_set_size(btn, 120, 50);                          /*Set its size*/
 
-    /*Modify the Label's text*/
-    lv_label_set_text(label1, "Hello world! 123");
+    lv_obj_t * label1 = lv_label_create(btn, NULL);           /*Add a label to the button*/
+    lv_label_set_text(label1, "Power it up!");                /*Set the labels text*/
 
-    /* Align the Label to the center
-     * NULL means align on parent (which is the screen now)
-     * 0, 0 at the end means an x, y offset after alignment*/
-    lv_obj_align(label1, NULL, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_t * label2 = lv_label_create(lv_scr_act(), NULL);  /*Add a label to the button*/
+    lv_label_set_text(label2, "CC");                          /*Set the labels text*/
+    lv_obj_set_pos(label2, 280, 10);                          /*Set its position*/
+
+    /* Create a slider in the center of the display */
+    lv_obj_t * slider = lv_slider_create(lv_scr_act(), NULL);
+    lv_obj_set_width(slider, 200);                        /*Set the width*/
+    lv_obj_align(slider, NULL, LV_ALIGN_CENTER, 0, 0);    /*Align to the center of the parent (screen)*/
+
+    /* Create a label below the slider */
+    lv_obj_t * label3 = lv_label_create(lv_scr_act(), NULL);
+    lv_label_set_text(label3, "Output Voltage: 0V");
+    lv_obj_set_auto_realign(slider, true);                           /*To keep center alignment when the width of the text changes*/
+    lv_obj_align(label3, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 20);    /*Align below the slider*/
 }
 
 /* USER CODE END Application */
